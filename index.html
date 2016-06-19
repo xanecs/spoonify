@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Löffler</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="terminal">
+    <div class="titlebar">
+      <span class="btn red"></span>
+      <span class="btn yellow"></span>
+      <span class="btn green"></span>
+    </div>
+    <div class="tabs">
+      <span id="to" class="active" onclick="switchTo()">Normal zu Löffel</span>
+      <span id="from" onclick="switchFrom()">Löffel zu Normal</span>
+    </div>
+    <div class="body">
+      <div class="label">Input:</div>
+      <div id="input" class="input" contenteditable="true" oninput="update()"></div>
+      <div id="output"></div>
+    </div>
+  </div>
+  <script type="text/javascript" src="spoonify.js"></script>
+  <script>
+    var transform = spoon.to;
+    var lastFromText = "";
+    var lastToText = "";
+    var fromEl = document.getElementById("from");
+    var toEl = document.getElementById("to");
+    var inp = document.getElementById("input");
+    var outp = document.getElementById("output");
+    inp.focus();
+    function update() {
+      var t = transform(inp.innerText);
+      if (transform == spoon.from) {
+        if (t[1]) {
+          outp.className = "error output";
+          console.log(t);
+          outp.innerText = "ERROR"
+        } else {
+          outp.className = "output";
+          outp.innerText = t[0];
+        }
+      } else {
+        outp.innerText = t;
+      }
+      outp.scrollTop = 1000
+    }
+    function switchTo() {
+      lastFromText = inp.innerText;
+      inp.innerText = lastToText;
+      transform = spoon.to;
+      fromEl.className = "";
+      toEl.className = "active";
+      inp.focus();
+      update();
+    }
+    function switchFrom() {
+      lastToText = inp.innerText;
+      inp.innerText = lastFromText;
+      transform = spoon.from;
+      fromEl.className = "active";
+      toEl.className = "";
+      inp.focus();
+      update();
+    }
+  </script>
+</body>
